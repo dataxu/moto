@@ -188,6 +188,14 @@ def image_ids_from_querystring(querystring_dict):
     return image_ids
 
 
+def executable_users_from_querystring(querystring_dict):
+    user_ids = []
+    for key, value in querystring_dict.items():
+        if 'ExecutableBy' in key:
+            user_ids.append(value[0])
+    return user_ids
+
+
 def route_table_ids_from_querystring(querystring_dict):
     route_table_ids = []
     for key, value in querystring_dict.items():
@@ -381,7 +389,8 @@ filter_dict_attribute_mapping = {
     'private-ip-address': 'private_ip',
     'ip-address': 'public_ip',
     'availability-zone': 'placement',
-    'architecture': 'architecture'
+    'architecture': 'architecture',
+    'image-id': 'image_id'
 }
 
 
@@ -458,6 +467,9 @@ def filter_internet_gateways(igws, filter_dict):
 
 def is_filter_matching(obj, filter, filter_value):
     value = obj.get_filter_value(filter)
+
+    if not filter_value:
+        return False
 
     if isinstance(value, six.string_types):
         return value in filter_value
